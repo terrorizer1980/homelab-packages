@@ -1,6 +1,5 @@
 image:
   repository: ghcr.io/paynejacob/homelab-packages/wireguard
-  tag: latest
   pullPolicy: Always
 
 persistence:
