@@ -3,6 +3,7 @@
 build_path="$(pwd)/dist"
 
 function set_env() {
+    package=$(yq e '.name' package.yaml)
     version=$(yq e '.version' package.yaml)
 
     if [ -n "$(git status --porcelain --untracked-files=no)" ]
@@ -17,7 +18,7 @@ function build_image() {
         return 0
     fi
 
-    image_tag="ghcr.io/paynejacob/homelab-packages/test:$version"
+    image_tag="ghcr.io/paynejacob/homelab-packages/$package:$version"
 
     docker build -t "$image_tag" .
 
