@@ -7,9 +7,10 @@ metadata:
 spec:
   type: NodePort
   ports:
-    - port: {{.Values.port}}
+    - port: 51820
       nodePort: {{.Values.port}}
       protocol: UDP
-      targetPort: {{.Values.port}}
+      targetPort: 51820
   selector:
-    app: {{ template "wireguard.fullname" . }}
+    app: {{ template "wireguard.name" . }}
+    release: {{ .Release.Name }}

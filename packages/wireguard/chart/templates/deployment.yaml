@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "wireguard.fullname" . }}
+  labels:
+    app: {{ template "wireguard.fullname" . }}
+{{ include "wireguard.labels.standard" . | indent 4 }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "wireguard.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+      labels:
+        app: {{ template "wireguard.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: wg-config
+          persistentVolumeClaim:
+            claimName: {{ template "wireguard.fullname" . }}
+        - name: host-volumes
+          hostPath:
+            path: /lib/modules
+            type: Directory
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ template "wireguard.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ template "wireguard.fullname" . }}
+          securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+              - SYS_MODULE
+            privileged: true
+          volumeMounts:
+            - name: wg-config
+              mountPath: /config
+            - name: host-volumes
+              mountPath: /lib/modules
+          ports:
+            - containerPort: 51820
+              protocol: UDP
+          resources:
+    {{ toYaml .Values.resources | indent 12 }}
