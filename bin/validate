@@ -1,0 +1,13 @@
+#!/bin/bash
+
+for package_path in packages/*/
+do
+    pushd "$package_path" || exit
+
+        helm lint chart
+        docker build --no-cache . || exit 1
+
+
+    popd || exit
+done
+
