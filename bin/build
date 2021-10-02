@@ -31,10 +31,14 @@ function build_chart() {
         return 0
     fi
 
-    yq e -i ".version=\"$version\"" chart/Chart.yaml
-    yq e -i ".appVersion=\"$version\"" chart/Chart.yaml
+    cp -r chart .chart
 
-    helm package chart -d "$build_path"
+    yq e -i ".version=\"$version\"" .chart/Chart.yaml
+    yq e -i ".appVersion=\"$version\"" .chart/Chart.yaml
+
+    helm package .chart -d "$build_path"
+
+    rm -r .chart
 }
 
 rm -r "$build_path" || true
