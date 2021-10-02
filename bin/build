@@ -37,12 +37,12 @@ function build_chart() {
     helm package chart -d "$build_path"
 }
 
+rm -r "$build_path" || true
 for package_path in packages/*/
 do
     pushd "$package_path" || exit
         set_env
 
-        rm -r "$build_path" || true
         mkdir -p "$build_path"
 
         build_image
