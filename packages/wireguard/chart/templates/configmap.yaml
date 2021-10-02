@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "wireguard.fullname" . }}
+  labels:
+{{ include "wireguard.labels.standard" . | indent 4 }}
+data:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "America/Arizona"
+  SERVERPORT: "{{ .Values.port }}"
+  PEERS: "{{ .Values.peers }}"
+  PEERDNS: "{{ .Values.dns }}"
+  ALLOWEDIPS: "0.0.0.0/0, ::/0"
+  INTERNAL_SUBNET: "{{ .Values.subnet }}"

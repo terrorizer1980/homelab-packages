@@ -1,0 +1,1 @@
+FROM linuxserver/wireguard:version-v1.0.20210914
