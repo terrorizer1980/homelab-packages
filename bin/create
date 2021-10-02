@@ -1,0 +1,29 @@
+#!/bin/bash
+
+package_name=$1
+package_path="packages/$package_name"
+
+# ensure the package name is set
+if [ -z "$package_name" ]
+then
+    echo "Package name is required."
+    exit 1
+fi
+
+# check if the package already exists
+if [ -d "$package_path" ]
+then 
+    echo "Package already exists."
+    exit 1
+fi
+
+echo "Creating new package $package_name."
+
+# create the package
+mkdir "$package_path"
+
+# apply the template
+cp template/Dockerfile.tmpl "$package_path/Dockerfile"
+yq e ".name=\"$package_name\"" template/package.yaml.tmpl > "$package_path/package.yaml"
+helm create -p "$(pwd)/template/scaffold" "$package_name"
+mv "$package_name" "$package_path/chart"

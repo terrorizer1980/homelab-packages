@@ -1,0 +1,39 @@
+# Default values for chartmuseum.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: ghcr.io/paynejacob/homelab-packages/chartmuseum
+  pullPolicy: Always
+
+service:
+  type: ClusterIP
+  externalPort: 80
+  internalPort: 8080
+
+ingress:
+  enabled: false
+  hosts:
+  - chartmuseum.local
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/proxy-body-size: 1024m
+
+resources: {}
+
+secrets: {}
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  accessMode: "ReadWriteOnce"
+  size: "10Gi"
+
+configuration:
+  auth_enabled: true
+  disable_delete: true
+  disable_force_overwrite: true
+  cors_alloworigin: chartmuseum.local
+  auth_anonymous_get: true
+  storage_local_rootdir: /data

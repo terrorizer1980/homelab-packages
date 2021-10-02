@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "chartmuseum.fullname" . }}
+  labels:
+{{ include "chartmuseum.labels.standard" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "chartmuseum.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "chartmuseum.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ template "chartmuseum.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          livenessProbe:
+{{ include "chartmuseum.probe" . | indent  12 }}
+          readinessProbe:
+{{ include "chartmuseum.probe" . | indent  12 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          args:
+            {{- if .Values.configuration.disable_delete }}
+            - "--disable-delete"
+            {{- end}}
+            {{- if .Values.configuration.disable_force_overwrite }}
+            - "--disable-force-overwrite"
+            {{- end}}
+            {{- if .Values.configuration.cors_alloworigin }}
+            - "--cors-alloworigin={{ .Values.configuration.cors_alloworigin }}}"
+            {{- end}}
+            {{- if and .Values.configuration.auth_enabled .Values.configuration.auth_anonymous_get }}
+            - "--auth-anonymous-get"
+            {{- end}}
+            {{- if and .Values.configuration.auth_enabled }}
+            - "--basic-auth-user=$(AUTH_USER)"
+            - "--basic-auth-pass=$(AUTH_PASSWORD)"
+            {{- end}}
+            - "--storage=local"
+            - "--storage-local-rootdir={{ .Values.configuration.storage_local_rootdir }}"
+          envFrom:
+            - secretRef:
+                name: {{ template "chartmuseum.fullname" . }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - mountPath: {{ .Values.configuration.storage_local_rootdir }}
+              name: data
+          {{- end }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "chartmuseum.fullname" . }}
+      {{- end }}

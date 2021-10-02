@@ -1,0 +1,51 @@
+#!/bin/bash
+
+build_path="$(pwd)/dist"
+
+function set_env() {
+    version=$(yq e '.version' package.yaml)
+
+    if [ -n "$(git status --porcelain --untracked-files=no)" ]
+    then
+        version="$version-dev"
+    fi
+}
+
+function build_image() {
+    if [ ! -f "Dockerfile" ]
+    then
+        return 0
+    fi
+
+    image_tag="ghcr.io/paynejacob/homelab-packages/test:$version"
+
+    docker build -t "$image_tag" .
+
+    echo "$image_tag" >> "$build_path/images.txt"
+}
+
+function build_chart() {
+    if [ ! -d "chart" ]
+    then
+        return 0
+    fi
+
+    yq e -i ".version=\"$version\"" chart/Chart.yaml
+    yq e -i ".appVersion=\"$version\"" chart/Chart.yaml
+
+    helm package chart -d "$build_path"
+}
+
+for package_path in packages/*/
+do
+    pushd "$package_path" || exit
+        set_env
+
+        rm -r "$build_path" || true
+        mkdir -p "$build_path"
+
+        build_image
+        build_chart
+    popd || exit
+done
+
