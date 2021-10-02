@@ -17,5 +17,5 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - run: bin/build
-      - run: for chart in $(ls dist/*.tgz); do curl -u $CHARTS_CREDENTIALS --data-binary "@$chart" https://charts.jacobapayne.com/api/charts
+      - run: for chart in dist/*.tgz; do curl -s -u ${{ secrets.CHARTS_CREDENTIALS }} --data-binary @$chart https://charts.jacobapayne.com/api/charts; done
       - run: while read image; do docker push $image; done < dist/images.txt
