@@ -1,0 +1,18 @@
+image:
+  repository: ghcr.io/paynejacob/homelab-packages/wireguard
+  tag: latest
+  pullPolicy: Always
+
+persistence:
+  enabled: true
+  existingClaim: ""
+  accessMode: "ReadWriteOnce"
+  size: "10M"
+
+# WG configuration
+port: 31820
+peers: "1"
+dns: "1.1.1.1"
+subnet: "10.9.0.0"
+
+resources: {}

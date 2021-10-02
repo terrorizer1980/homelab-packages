@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ template "wireguard.fullname" . }}
+  labels:
+{{ include "wireguard.labels.standard" . | indent 4 }}
+spec:
+  type: NodePort
+  ports:
+    - port: {{.Values.port}}
+      nodePort: {{.Values.port}}
+      protocol: UDP
+      targetPort: {{.Values.port}}
+  selector:
+    app: {{ template "wireguard.fullname" . }}
