@@ -3,10 +3,15 @@
 for package_path in packages/*/
 do
     pushd "$package_path" || exit
+        if [ ! -d "chart" ]
+        then
+            helm lint chart
+        fi
 
-        helm lint chart
-        docker build --no-cache . || exit 1
-
+        if [ ! -f "Dockerfile" ]
+        then
+            docker build --no-cache . || exit 1
+        fi
 
     popd || exit
 done
