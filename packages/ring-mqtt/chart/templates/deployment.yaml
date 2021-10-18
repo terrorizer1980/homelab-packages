@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "ring-mqtt.fullname" . }}
+  labels:
+{{ include "ring-mqtt.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "ring-mqtt.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "ring-mqtt.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+      - name: config
+        secret:
+          secretName: {{ template "ring-mqtt.fullname" . }}
+          items:
+            - key: config.json
+              path: config.json
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ template "ring-mqtt.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          volumeMounts:
+            - mountPath: /data/
+              name: config
+              readOnly: true
+          resources:
+{{ toYaml .Values.resources | indent 12 }}

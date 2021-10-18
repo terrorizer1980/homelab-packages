@@ -1,0 +1,29 @@
+# Default values for ring-mqtt.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+replicaCount: 1
+
+image:
+  repository: ghcr.io/paynejacob/homelab-packages/ring-mqtt
+  pullPolicy: Always
+
+resources: {}
+
+configuration:
+  host: localhost
+  port: 1883
+  mqtt_user: ""
+  mqtt_pass: ""
+  ring_token: ""
+  disarm_code: ""
+  beam_duration: 0
+  enable_cameras: false
+  snapshot_mode: none
+  livestream_user: ""
+  livestream_pass: ""
+  enable_modes: false
+  enable_panic: false
+  hass_topic: homeassistant/status
+  ring_topic: ring
+  location_ids:
+    - ""
