@@ -1,0 +1,1 @@
+FROM tsightler/ring-mqtt:4.8.5
