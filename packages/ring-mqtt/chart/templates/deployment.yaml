@@ -28,8 +28,8 @@ spec:
           image: {{ template "ring-mqtt.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           volumeMounts:
-            - mountPath: /data/
+            - mountPath: /data/config.json
+              subPath: config.json
               name: config
-              readOnly: true
           resources:
 {{ toYaml .Values.resources | indent 12 }}
