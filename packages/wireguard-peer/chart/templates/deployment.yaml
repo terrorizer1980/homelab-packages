@@ -30,14 +30,21 @@ spec:
               add:
                 - NET_ADMIN
                 - SYS_MODULE
+            privileged: true
           volumeMounts:
             - mountPath: /config/
               readOnly: true
               name: config
+            - name: host-volumes
+              mountPath: /lib/modules
           resources:
 {{ toYaml .Values.resources | indent 12 }}
       volumes:
         - name: config
           secret:
             secretName: {{ .Values.configSecret }}
+        - name: host-volumes
+          hostPath:
+            path: /lib/modules
+            type: Directory
 
