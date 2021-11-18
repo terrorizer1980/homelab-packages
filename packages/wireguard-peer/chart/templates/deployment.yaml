@@ -16,7 +16,7 @@ spec:
         release: {{ .Release.Name }}
     spec:
       hostNetwork: true
-      dnsPolicy: None
+      dnsPolicy: ClusterFirstWithHostNet
       securityContext:
         runAsGroup: 1000
         runAsUser: 1000
