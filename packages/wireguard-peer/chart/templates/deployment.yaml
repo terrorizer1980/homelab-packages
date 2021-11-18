@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "wireguard-peer.fullname" . }}
+  labels:
+{{ include "wireguard-peer.labels.standard" . | indent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "wireguard-peer.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "wireguard-peer.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      hostNetwork: true
+      dnsPolicy: None
+      securityContext:
+        runAsGroup: 1000
+        runAsUser: 1000
+        runAsNonRoot: true
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ template "wireguard-peer.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            capabilities:
+              - add:
+                  - NET_ADMIN
+                  - SYS_MODULE
+          volumeMounts:
+            - mountPath: /config/
+              readOnly: true
+              name: config
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: config
+          secret:
+            secretName: {{ .Values.configSecret }}
+
