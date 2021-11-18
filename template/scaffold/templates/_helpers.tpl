@@ -11,7 +11,8 @@ Expand the name of the chart.
 Expands image name.
 */}}
 {{- define "<CHARTNAME>.image" -}}
-{{- printf "%s:%s" .Values.image.repository .Values.image.tag -}}
+{{- $tag := default .Chart.AppVersion .Values.image.tag -}}
+{{- printf "%s:%s" .Values.image.repository $tag -}}
 {{- end -}}
 
 {{/*
