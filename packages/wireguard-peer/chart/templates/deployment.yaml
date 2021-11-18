@@ -27,9 +27,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           securityContext:
             capabilities:
-              - add:
-                  - NET_ADMIN
-                  - SYS_MODULE
+              add:
+                - NET_ADMIN
+                - SYS_MODULE
           volumeMounts:
             - mountPath: /config/
               readOnly: true
