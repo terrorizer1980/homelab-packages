@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "docker-registry.fullname" . }}
+  labels:
+{{ include "docker-registry.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "docker-registry.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "docker-registry.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ template "docker-registry.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.internalPort }}
+          volumeMounts:
+            - mountPath: /var/lib/registry/
+              name: data
+            - mountPath: /etc/docker/registry
+              name: {{ template "docker-registry.fullname" . }}
+          livenessProbe:
+{{ include "docker-registry.probe" . | indent  12 }}
+          readinessProbe:
+{{ include "docker-registry.probe" . | indent  12 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ template "docker-registry.fullname" . }}
+        - configMap:
+            defaultMode: 420
+            name: {{ template "docker-registry.fullname" . }}
+          name: {{ template "docker-registry.fullname" . }}
