@@ -24,3 +24,5 @@ data:
       cache:
         blobdescriptor: inmemory
     version: 0.1
+    proxy:
+      remoteurl: {{ .Values.remoteURL }}
