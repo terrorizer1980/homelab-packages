@@ -4,7 +4,6 @@ metadata:
   name: {{ template "docker-registry.fullname" . }}
   labels:
 {{ include "docker-registry.labels.standard" . | indent 4 }}
-type: Opaque
 data:
   config.yaml: |
     health:
