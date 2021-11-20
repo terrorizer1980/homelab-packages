@@ -23,7 +23,7 @@ The standart k8s probe used for redinessProbe and livenessProbe
 httpGet:
   path: /
   port: {{ .Values.service.internalPort }}
-  initialDelay: 5
+initialDelaySeconds: 5
 {{- end -}}
 
 {{/*

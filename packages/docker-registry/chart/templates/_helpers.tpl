@@ -23,7 +23,7 @@ docker-registry.probe is http get request
 httpGet:
   path: /
   port: {{ .Values.service.internalPort }}
-  initialDelay: 5
+initialDelaySeconds: 5
 {{- end -}}
 
 {{/*
