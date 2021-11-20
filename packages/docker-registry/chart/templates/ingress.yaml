@@ -24,7 +24,7 @@ spec:
                 name: {{ $serviceName }}
                 port:
                   number: {{ $servicePort }}
-    {{- end -}}
+    {{- end }}
   tls:
     {{- range $host := .Values.ingress.hosts }}
     - secretName: {{ $host | include "docker-registry.utils.tls" }}

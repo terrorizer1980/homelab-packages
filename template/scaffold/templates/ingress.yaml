@@ -21,7 +21,7 @@ spec:
             backend:
               serviceName: {{ $serviceName }}
               servicePort: {{ $servicePort }}
-    {{- end -}}
+    {{- end }}
   tls:
     {{- range $host := .Values.ingress.hosts }}
     - secretName: {{ $host | include "<CHARTNAME>.utils.tls" }}
