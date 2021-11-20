@@ -1,0 +1,12 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: {{ template "mqtt.fullname" . }}
+  labels:
+{{ include "mqtt.labels.standard" . | indent 4 }}
+spec:
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: {{ template "mqtt.fullname" . }}
+          port: mqtt
