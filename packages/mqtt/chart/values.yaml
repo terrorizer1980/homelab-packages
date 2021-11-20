@@ -7,13 +7,4 @@ image:
   repository: ghcr.io/paynejacob/homelab-packages/mqtt
   pullPolicy: Always
 
-ingress:
-  enabled: false
-  hosts:
-  - mqtt.localhost
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-
 resources: {}
-
-secrets: {}
