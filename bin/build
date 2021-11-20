@@ -1,6 +1,6 @@
 #!/bin/bash
 
-build_path="$(pwd)/dist"
+build_path="$(pwd)/dist/"
 
 function buildImage() {
     if [ ! -f "Dockerfile" ]
@@ -51,6 +51,8 @@ function buildPackage() {
 
 rm -r "$build_path" || true
 mkdir -p "$build_path"
+touch "$build_path/images.txt"
+
 for package_path in packages/*/
 do
     pushd "$package_path" || exit
