@@ -24,7 +24,7 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/registry/
               name: data
-            - mountPath: /etc/docker/registry
+            - mountPath: /etc/docker/data/
               name: {{ template "docker-registry.fullname" . }}
           livenessProbe:
 {{ include "docker-registry.probe" . | indent  12 }}
@@ -37,6 +37,5 @@ spec:
           persistentVolumeClaim:
             claimName: {{ template "docker-registry.fullname" . }}
         - configMap:
-            defaultMode: 420
             name: {{ template "docker-registry.fullname" . }}
           name: {{ template "docker-registry.fullname" . }}
