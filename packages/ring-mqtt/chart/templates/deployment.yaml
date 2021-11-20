@@ -23,6 +23,9 @@ spec:
           items:
             - key: config.json
               path: config.json
+      - name: {{ template "ring-mqtt.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ template "ring-mqtt.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: {{ template "ring-mqtt.image" . }}
@@ -31,5 +34,7 @@ spec:
             - mountPath: /data/config.json
               subPath: config.json
               name: config
+            - mountPath: /data
+              name: {{ template "ring-mqtt.fullname" . }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}

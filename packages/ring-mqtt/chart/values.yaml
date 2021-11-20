@@ -7,6 +7,13 @@ image:
   repository: ghcr.io/paynejacob/homelab-packages/ring-mqtt
   pullPolicy: Always
 
+persistence:
+  enabled: true
+  existingClaim: ""
+  storageClassName: ""
+  accessMode: "ReadWriteMany"
+  size: "10Mi"
+
 resources: {}
 
 configuration:
