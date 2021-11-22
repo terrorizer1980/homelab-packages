@@ -5,6 +5,8 @@ metadata:
   labels:
 {{ include "mqtt.labels.standard" . | indent 4 }}
 spec:
+  entryPoints:
+    - mqtt
   routes:
     - match: HostSNI(`*`)
       services:
