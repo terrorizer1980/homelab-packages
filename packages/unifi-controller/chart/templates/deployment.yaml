@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "unifi-controller.fullname" . }}
+  labels:
+{{ include "unifi-controller.labels.standard" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "unifi-controller.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "unifi-controller.name" . }}
+        release: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: {{ template "unifi-controller.fullname" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ template "unifi-controller.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+          ports:
+            - name: web
+              containerPort: 8443
+              protocol: TCP
+            - name: discovery
+              containerPort: 10001
+              protocol: UDP
+            - name: provisioning
+              containerPort: 8080
+              protocol: TCP
+            - name: speed-test
+              containerPort: 6789
+              protocol: TCP
+            - name: stun
+              containerPort: 3478
+              protocol: UDP
+          volumeMounts:
+            - mountPath: /config
+              name: config
+          livenessProbe:
+{{ include "unifi-controller.probe" . | indent  12 }}
+          readinessProbe:
+{{ include "unifi-controller.probe" . | indent  12 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
