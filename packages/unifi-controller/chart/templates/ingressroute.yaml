@@ -1,0 +1,49 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: {{ template "unifi-controller.name" . }}-discovery
+spec:
+  entryPoints:
+    - discovery
+  routes:
+    - services:
+        - name: {{ template "unifi-controller.name" . }}-discovery
+          port: 10001
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: {{ template "unifi-controller.name" . }}-provisioning
+spec:
+  entryPoints:
+    - provisioning
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: {{ template "unifi-controller.name" . }}
+          port: 8080
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteTCP
+metadata:
+  name: {{ template "unifi-controller.name" . }}-speed-test
+spec:
+  entryPoints:
+    - speed-test
+  routes:
+    - match: HostSNI(`*`)
+      services:
+        - name: {{ template "unifi-controller.name" . }}-speed-test
+          port: 6789
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRouteUDP
+metadata:
+  name: {{ template "unifi-controller.name" . }}-stun
+spec:
+  entryPoints:
+    - stun
+  routes:
+    - services:
+        - name: {{ template "unifi-controller.name" . }}-stun
+          port: 3478
