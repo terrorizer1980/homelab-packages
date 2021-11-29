@@ -6,8 +6,13 @@ metadata:
 {{ include "unifi-controller.labels.standard" . | indent 4 }}
 spec:
   ports:
-    - port: 8080
+    - name: provisioning
+      port: 8080
       targetPort: 8080
+      protocol: TCP
+    - name: ui
+      port: 8443
+      targetPort: 8443
       protocol: TCP
   selector:
     app: {{ template "unifi-controller.name" . }}

@@ -1,4 +1,29 @@
 apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ template "unifi-controller.name" . }}
+  labels:
+{{ include "unifi-controller.labels.standard" . | indent 4 }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.host }}`)
+      kind: Rule
+      services:
+        - name: {{ template "unifi-controller.name" . }}
+          kind: Service
+          port: 8443
+          passHostHeader: true
+          scheme: https
+          sticky:
+            cookie:
+              sameSite: none
+          serversTransport: {{ template "unifi-controller.name" . }}
+  tls:
+    secretName: {{ template "unifi-controller.name" . }}
+---
+apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRouteUDP
 metadata:
   name: {{ template "unifi-controller.name" . }}-discovery

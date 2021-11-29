@@ -1,0 +1,8 @@
+apiVersion: traefik.containo.us/v1alpha1
+kind: ServersTransport
+metadata:
+  name: {{ template "unifi-controller.name" . }}
+  labels:
+{{ include "unifi-controller.labels.standard" . | indent 4 }}
+spec:
+  insecureSkipVerify: true
