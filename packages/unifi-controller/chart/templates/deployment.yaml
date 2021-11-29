@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "unifi-controller.fullname" . }}
+  name: {{ template "unifi-controller.name" . }}
   labels:
 {{ include "unifi-controller.labels.standard" . | indent 4 }}
 spec:
@@ -18,7 +18,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: {{ template "unifi-controller.fullname" . }}
+            claimName: {{ template "unifi-controller.name" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: {{ template "unifi-controller.image" . }}

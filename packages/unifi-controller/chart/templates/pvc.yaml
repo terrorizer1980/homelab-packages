@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ template "unifi-controller.fullname" . }}
+  name: {{ template "unifi-controller.name" . }}
   labels:
 {{ include "unifi-controller.labels.standard" . | indent 4 }}
 spec:
