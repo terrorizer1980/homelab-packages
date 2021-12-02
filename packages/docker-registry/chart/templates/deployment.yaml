@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ template "docker-registry.fullname" . }}
+  name: {{ template "docker-registry.name" . }}
   labels:
 {{ include "docker-registry.labels.standard" . | indent 4 }}
 spec:
@@ -24,8 +24,8 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/registry/
               name: data
-            - mountPath: /etc/docker/data/
-              name: {{ template "docker-registry.fullname" . }}
+            - mountPath: /etc/docker/registry/
+              name: {{ template "docker-registry.name" . }}
           livenessProbe:
 {{ include "docker-registry.probe" . | indent  12 }}
           readinessProbe:
@@ -35,7 +35,7 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ template "docker-registry.fullname" . }}
+            claimName: {{ template "docker-registry.name" . }}
         - configMap:
-            name: {{ template "docker-registry.fullname" . }}
-          name: {{ template "docker-registry.fullname" . }}
+            name: {{ template "docker-registry.name" . }}
+          name: {{ template "docker-registry.name" . }}
