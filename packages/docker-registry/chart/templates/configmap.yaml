@@ -5,7 +5,7 @@ metadata:
   labels:
 {{ include "docker-registry.labels.standard" . | indent 4 }}
 data:
-  config.yaml: |
+  config.yml: |
     health:
       storagedriver:
         enabled: true
